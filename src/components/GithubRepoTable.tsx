@@ -1,23 +1,12 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { useTable, Column } from "react-table";
+import { useTable } from "react-table";
 
-interface GithubRepoProps {
-  repoOwnerProfileUrl: string;
-  ownerName: string;
-  repoName: string;
-  repoUrl: string;
-  description: string;
-}
-
-interface GithubRepoTableProps {
-  columns: Column[];
-  data: GithubRepoProps[];
-}
+import { GithubRepoTable } from "../interfaces/GithubRepo";
 
 const StyledTable = styled.div``;
 
-const Table: FC<GithubRepoTableProps> = ({ columns, data }) => {
+const Table: FC<GithubRepoTable> = ({ columns, data }) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,

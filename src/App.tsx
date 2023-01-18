@@ -1,4 +1,4 @@
-import GithubRepo from "./container/GithubRepo";
+import GithubRepo from "./containers/GithubRepo";
 
 const App = () => {
   return <GithubRepo />;
