@@ -26,7 +26,7 @@ const GithubRepo = () => {
         return {
           repoOwnerProfileUrl: repo.owner.avatar_url,
           ownerName: repo.owner.login,
-          repoName: repo.full_name,
+          repoName: repo.name,
           repoUrl: repo.html_url,
           description: repo.description,
         };

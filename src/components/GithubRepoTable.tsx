@@ -1,22 +1,86 @@
-import { FC } from "react";
+import { useState, FC } from "react";
 import styled from "styled-components";
-import { useTable } from "react-table";
+import {
+  useTable,
+  useGlobalFilter,
+  useAsyncDebounce,
+  Row,
+  TableInstance,
+} from "react-table";
 
 import { GithubRepoTable } from "../interfaces/GithubRepo";
 
 const StyledTable = styled.div``;
 
+interface useTableProps extends TableInstance {
+  preGlobalFilteredRows?: Array<Row>;
+  setGlobalFilter?: () => void;
+  state: any;
+}
+
+const SearchFilter = ({
+  preGlobalFilteredRows,
+  globalFilter,
+  setGlobalFilter,
+}: any) => {
+  const count = preGlobalFilteredRows.length;
+  const [value, setValue] = useState(globalFilter);
+  const onChange = useAsyncDebounce((value) => {
+    setGlobalFilter(value || undefined);
+  }, 200);
+
+  return (
+    <span>
+      Search:{" "}
+      <input
+        value={value || ""}
+        onChange={(e) => {
+          setValue(e.target.value);
+          onChange(e.target.value);
+        }}
+        placeholder={`${count} records...`}
+      />
+    </span>
+  );
+};
+
 const Table: FC<GithubRepoTable> = ({ columns, data }) => {
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    visibleColumns,
+    state,
+    preGlobalFilteredRows,
+    setGlobalFilter,
+  }: useTableProps = useTable(
+    {
       columns,
       data,
-    });
+    },
+    useGlobalFilter
+  );
 
   return (
     <StyledTable>
       <table {...getTableProps()}>
         <thead>
+          <tr>
+            <th
+              colSpan={visibleColumns.length}
+              style={{
+                textAlign: "left",
+              }}
+            >
+              <SearchFilter
+                preGlobalFilteredRows={preGlobalFilteredRows}
+                globalFilter={state.globalFilter}
+                setGlobalFilter={setGlobalFilter}
+              />
+            </th>
+          </tr>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
