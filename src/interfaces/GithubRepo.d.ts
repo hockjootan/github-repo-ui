@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { Column } from "react-table";
 
 export interface GithubRepoData {
@@ -22,10 +23,10 @@ export interface GithubRepoData {
 }
 
 export interface GithubRepoTableData {
-  repoOwnerProfileUrl: string;
+  repoOwnerProfileUrl: ReactNode;
   ownerName: string;
   repoName: string;
-  repoUrl: string;
+  repoUrl: ReactNode;
   description: string;
 }
 

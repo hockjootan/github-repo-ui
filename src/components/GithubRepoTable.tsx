@@ -13,7 +13,42 @@ import {
 
 import { GithubRepoTable } from "../interfaces/GithubRepo";
 
-const StyledTable = styled.div``;
+const StyledTable = styled.div`
+  margin-top: 15px;
+
+  table {
+    tr {
+      border-bottom: 1px solid white;
+      :last-child {
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+  }
+`;
+
+const StyledSearchContainer = styled.div`
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  input {
+    width: 250px;
+    margin-left: 15px;
+    height: 24px;
+
+    &[type="text"] {
+      font-size: 16px;
+    }
+  }
+`;
 
 // Inteface merging for custom option as per say in react-table types
 interface useTableProps
@@ -44,9 +79,10 @@ const SearchFilter = ({
   }, 200);
 
   return (
-    <span>
-      Search:{" "}
+    <StyledSearchContainer>
+      <span>Search:</span>
       <input
+        type="text"
         value={value || ""}
         onChange={(e) => {
           setValue(e.target.value);
@@ -54,7 +90,7 @@ const SearchFilter = ({
         }}
         placeholder={`${count} records...`}
       />
-    </span>
+    </StyledSearchContainer>
   );
 };
 
@@ -64,7 +100,6 @@ const Table: FC<GithubRepoTable> = ({ columns, data }) => {
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    visibleColumns,
     state: { pageIndex, pageSize, globalFilter },
     // search filters
     preGlobalFilteredRows,
@@ -100,24 +135,15 @@ const Table: FC<GithubRepoTable> = ({ columns, data }) => {
 
   return (
     <StyledTable>
+      {isSearchReady ? (
+        <SearchFilter
+          preGlobalFilteredRows={preGlobalFilteredRows}
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFilter}
+        />
+      ) : null}
       <table {...getTableProps()}>
         <thead>
-          <tr>
-            {isSearchReady ? (
-              <th
-                colSpan={visibleColumns.length}
-                style={{
-                  textAlign: "left",
-                }}
-              >
-                <SearchFilter
-                  preGlobalFilteredRows={preGlobalFilteredRows}
-                  globalFilter={globalFilter}
-                  setGlobalFilter={setGlobalFilter}
-                />
-              </th>
-            ) : null}
-          </tr>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
